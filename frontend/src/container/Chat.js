@@ -45,7 +45,7 @@ class Chat extends React.Component{
     }
 
     renderMessages = (messages) => {
-        const currentUser = 'admin';
+        const currentUser = 'mfa';
         return messages.map(message => (
             <li
                 key={message.id}
