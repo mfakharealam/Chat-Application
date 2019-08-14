@@ -38,25 +38,43 @@ class Chat extends React.Component{
         });
     }
 
-    setMessages(message){
+    setMessages(messages){
         this.setState({
             messages: messages.reverse()
         });
     }
 
+    messageChangeHandler = (event) =>  {
+        this.setState({
+            message: event.target.value
+        })
+    };
+
+    sendMessageHandler = (e) => {
+        e.preventDefault();
+        const messageObject = {
+            from: "mfa",
+            content: this.state.message,
+        };
+        WebSocketInstance.newChatMessage(messageObject);
+        this.setState({
+            message: ''
+        });
+    };
+
     renderMessages = (messages) => {
-        const currentUser = 'mfa';
+        const currentUser = "mfa";
         return messages.map(message => (
             <li
                 key={message.id}
                 className={message.author === currentUser ? 'sent' : 'replies'}>
-                <img src="http://emilcarlsson.se/assets/mikeross.png" />
+                <img alt={'profile pic'} src="http://emilcarlsson.se/assets/mikeross.png" />
                 <p>
                     {message.content}
                 </p>
             </li>
         ))
-    }
+    };
 
     render() {
         const messages = this.state.messages;
@@ -68,9 +86,9 @@ class Chat extends React.Component{
                         <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt=""/>
                         <p>username</p>
                         <div className="social-media">
-                            <i className="fa fa-facebook" aria-hidden="true"></i>
-                            <i className="fa fa-twitter" aria-hidden="true"></i>
-                            <i className="fa fa-instagram" aria-hidden="true"></i>
+                            <i className="fa fa-facebook" aria-hidden="true"/>
+                            <i className="fa fa-twitter" aria-hidden="true"/>
+                            <i className="fa fa-instagram" aria-hidden="true"/>
                         </div>
                     </div>
                     <div className="messages">
@@ -82,13 +100,21 @@ class Chat extends React.Component{
                         </ul>
                     </div>
                     <div className="message-input">
-                        <div className="wrap">
-                            <input id="chat-message-input" type="text" placeholder="Write your message..."/>
-                            <i className="fa fa-paperclip attachment" aria-hidden="true"></i>
-                            <button id="chat-message-submit" className="submit">
-                                <i className="fa fa-paper-plane" aria-hidden="true"></i>
-                            </button>
-                        </div>
+                        <form onSubmit={this.sendMessageHandler}>
+                            <div className="wrap">
+                                <input
+                                    onChange={this.messageChangeHandler}
+                                    value={this.state.message}
+                                    required
+                                    id="chat-message-input"
+                                    type="text"
+                                    placeholder="Write your message..." />
+                                <i className="fa fa-paperclip attachment" aria-hidden="true"/>
+                                <button id="chat-message-submit" className="submit">
+                                    <i className="fa fa-paper-plane" aria-hidden="true"/>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

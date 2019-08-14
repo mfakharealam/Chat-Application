@@ -23,7 +23,7 @@ class WebSocketService {
           command: 'fetch_messages'
         }));
         this.socketRef.onmessage = e =>{
-            // send msg
+            this.socketNewMessage(e.data);
         };
         this.socketRef.onerror = e =>{
             console.log(e.message);
@@ -31,13 +31,13 @@ class WebSocketService {
         this.socketRef.onclose = () =>{
             console.log('websocket is closed');
             this.connect();
-        };
+        }
     }
 
     socketNewMessage(data){
         const parsedData = JSON.parse(data);
         const command = parsedData.command;
-        if (Object.keys(this.callbacks.length === 0)){
+        if (Object.keys(this.callbacks).length === 0){
             return;
         }
         if(command === 'messages'){
